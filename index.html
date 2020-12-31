@@ -34,18 +34,41 @@
           </select>
     </div>
     <script>
+        const URL = "https://pokeapi.co/api/v2/pokemon/";
+
+        var select = document.querySelector(".form-select");
+        var namePokemon  = document.querySelector(".card-title");
+        var img   = document.querySelector(".card-img-top");
+        var btn = document.querySelector(".btn");
+
+        select.addEventListener('change', getNewPokemon);
+        btn.addEventListener('click', changeToShiny);
+        
+        
+
         function getNewPokemon(event) {
         // Hacer que cada vez que se cambie el valor del select, se invoque esta función. Hacer una llamada con la Fetch API al endpoint para obtener los pokemons por nombre de pokemon. Debeis usar su nombre de pokemon como parte dinámica de la URL
-
+        
+            var fullURL = URL + select.value;
+            fetch(fullURL)
+            .then(response => response.json())
+            .then(data => updatePokemon(data))
         }
 
         function updatePokemon(response) {
             // cuando se ha completado el Fetch, este debe hacer una llamada a esta función pasando por parámetro los datos recibidos.
             // La función debe actualizar los elementos del DOM: imagen del pokemon, nombre, y guardar en algun lugar la ruta a la foto "shiny" del pokemon
+            namePokemon.innerHTML = response.species.name;
+            img.src = response.sprites.front_default;
+            img.classList.remove("d-none"); 
+            img["data-shiny-url"] = response.sprites.front_shiny;
+            
+
         }
 
         function changeToShiny() {
             // esta función debe ser llamada al hacer clic en el botón "Change to Shiny"; de manera que actualice la imagen a la versión "shiny" del Pokemon
+            img.src = img["data-shiny-url"];
         }
 
     </script>
